@@ -5,7 +5,7 @@
 Running the following command from this root directory with your specified versions will create a `layers/PyTorch.zip` file that can be used as an AWS Lambda layer:
 
 ```shell
-./scripts/make_layer.sh --python=3.8 --torch=1.5.1 --torchvision=0.6.1
+./scripts/make-layer.sh --python=3.8 --torch=1.5.1 --torchvision=0.6.1
 ```
 
 ## Background
@@ -36,7 +36,7 @@ This script relies on Docker to package the Python libraries in a simulated Lamb
 2) Run the script with your specified Python/package versions (Python and torch versions are required, and if torchvision/torchaudio versions are given then those packages will be included as well, otherwise they're omitted):
 
     ```shell
-    $ ./scripts/make_layer.sh \
+    $ ./scripts/make-layer.sh \
     --python=3.8 \
     --torch=1.5.1 \
     --torchvision=0.6.1 \
