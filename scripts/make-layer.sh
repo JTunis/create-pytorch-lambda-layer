@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # parse inputs
 for arg in "$@"
 do
