@@ -6,7 +6,7 @@ import zipfile
 
 pkg_dir = '/tmp/python-requirements'
 
-# Add package_dir to our path to Python will know to look there for packages
+# Add package_dir to our path so Python will know to look there for packages
 sys.path.insert(1, pkg_dir)
 
 if not os.path.exists(pkg_dir):
