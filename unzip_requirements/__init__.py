@@ -14,7 +14,7 @@ if not os.path.exists(pkg_dir):
     if os.path.exists(temp_dir):
         shutil.rmtree(temp_dir)
 
-    python_package_root = f'/opt/python/lib/python{python_version}/site-packages'  # location of installed Python packages
+    python_package_root = '/opt/python/lib/python{}/site-packages'.format(python_version)  # location of installed Python packages
     zip_requirements = os.path.join(python_package_root, 'requirements.zip')
 
     zipfile.ZipFile(zip_requirements, 'r').extractall(temp_dir)
