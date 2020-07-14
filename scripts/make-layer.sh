@@ -45,6 +45,7 @@ esac
 # cleanup function to run if the script errors
 failure_cleanup()
 {
+    echo "Cleaning up due to failure..."
     rm -rf python layers
     exit 1
 }
@@ -56,6 +57,7 @@ mkdir -p python/lib/python${PYTHON_VERSION}/site-packages
 mkdir layers
 
 # build packages in Lambda Docker container
+echo "Building Python packages with Docker...\n"
 docker run -v "$PWD":/var/task "lambci/lambda:build-python${PYTHON_VERSION}" /bin/sh -c \
 "pip install \
 ${TORCH_WHEEL} \
@@ -64,6 +66,7 @@ ${TORCHAUDIO_WHEEL} \
 -t python/lib/python${PYTHON_VERSION}/site-packages; exit" || failure_cleanup
 
 # remove extraneous files and directories
+echo "Removing extraneous files/directories...\n"
 cd "python/lib/python${PYTHON_VERSION}/site-packages" || failure_cleanup
 find . -type d -name "test*" -exec rm -rf {} +
 find . -type d -name "__pycache__" -exec rm -rf {} +
@@ -72,18 +75,25 @@ rm -rf ./{*.egg-info,*.dist-info}
 find . -name \*.pyc -delete
 
 # zip very large packages (like PyTorch or TensorFlow) individually -- these will ultimately be unzipped into Lambda's /tmp directory at runtime
-zip -r9 requirements.zip torch || failure_cleanup
+echo "Zipping torch package individually...\n"
+zip -r9 -q requirements.zip torch || failure_cleanup
 rm -rf torch
 
 # add unzip_requirements module to site-packages
+echo "Adding unzip_requirements module to layer...\n"
 cd "../../../.." || failure_cleanup
 cp -r unzip_requirements python/lib/python${PYTHON_VERSION}/site-packages || failure_cleanup
 
 # zip packages
-zip -r9 PyTorch.zip python || failure_cleanup
+echo "Zipping complete layer...\n"
+zip -r9 -q PyTorch.zip python || failure_cleanup
 
 # store zipped layer in layers
+echo "Storing zipped layer in layers/\n"
 mv PyTorch.zip layers || failure_cleanup
 
 # cleanup
+echo "Cleaning up...\n"
 rm -rf python
+
+echo "Done!"
