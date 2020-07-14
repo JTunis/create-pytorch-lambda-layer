@@ -68,7 +68,7 @@ ${TORCHAUDIO_WHEEL} \
 # remove extraneous files and directories
 echo "Removing extraneous files/directories...\n"
 cd "python/lib/python${PYTHON_VERSION}/site-packages" || failure_cleanup
-find . -type d -name "test*" -exec rm -rf {} +
+find . -type d -name "tests" -exec rm -rf {} +
 find . -type d -name "__pycache__" -exec rm -rf {} +
 rm -rf ./{caffe2,wheel,wheel-*,pkg_resources,boto*,aws*,pip,pip-*,pipenv,setuptools}
 rm -rf ./{*.egg-info,*.dist-info}
