@@ -12,7 +12,7 @@ do
     esac
 done
 
-# get short_python_version from input python version
+# derive short_python_version from input python version
 case ${PYTHON_VERSION} in
     2.7) SHORT_PYTHON_VERSION="cp27";;
     3.5) SHORT_PYTHON_VERSION="cp35";;
@@ -42,6 +42,13 @@ case ${TORCHAUDIO_VERSION} in
     *) TORCHAUDIO_WHEEL="https://download.pytorch.org/whl/torchaudio-${TORCHAUDIO_VERSION}-${SHORT_PYTHON_VERSION}-${SHORT_PYTHON_VERSION}-linux_x86_64.whl";;
 esac
 
+# cleanup function to run if the script errors
+failure_cleanup()
+{
+    rm -rf python layers
+    exit 1
+}
+
 # create directory into which packages will be installed
 mkdir -p python/lib/python${PYTHON_VERSION}/site-packages
 
@@ -54,10 +61,10 @@ docker run -v "$PWD":/var/task "lambci/lambda:build-python${PYTHON_VERSION}" /bi
 ${TORCH_WHEEL} \
 ${TORCHVISION_WHEEL} \
 ${TORCHAUDIO_WHEEL} \
--t python/lib/python${PYTHON_VERSION}/site-packages; exit" || exit 1
+-t python/lib/python${PYTHON_VERSION}/site-packages; exit" || failure_cleanup
 
 # remove extraneous files and directories
-cd "python/lib/python${PYTHON_VERSION}/site-packages" || exit 1
+cd "python/lib/python${PYTHON_VERSION}/site-packages" || failure_cleanup
 find . -type d -name "test*" -exec rm -rf {} +
 find . -type d -name "__pycache__" -exec rm -rf {} +
 rm -rf ./{caffe2,wheel,wheel-*,pkg_resources,boto*,aws*,pip,pip-*,pipenv,setuptools}
@@ -65,18 +72,18 @@ rm -rf ./{*.egg-info,*.dist-info}
 find . -name \*.pyc -delete
 
 # zip very large packages (like PyTorch or TensorFlow) individually -- these will ultimately be unzipped into Lambda's /tmp directory at runtime
-zip -r9 requirements.zip torch
+zip -r9 requirements.zip torch || failure_cleanup
 rm -rf torch
 
-# add unzip_requirements module
-cd "../../../.." || exit 1
-cp -r unzip_requirements python/lib/python${PYTHON_VERSION}/site-packages
+# add unzip_requirements module to site-packages
+cd "../../../.." || failure_cleanup
+cp -r unzip_requirements python/lib/python${PYTHON_VERSION}/site-packages || failure_cleanup
 
 # zip packages
-zip -r9 PyTorch.zip python
+zip -r9 PyTorch.zip python || failure_cleanup
 
-# store zipped layer in layer
-mv PyTorch.zip layers
+# store zipped layer in layers
+mv PyTorch.zip layers || failure_cleanup
 
 # cleanup
 rm -rf python
