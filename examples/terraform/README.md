@@ -56,6 +56,8 @@ resource aws_lambda_function pytorch_lambda {
 }
 ```
 
+You can find the full Terraform configuration [here](./main.tf)
+
 ## Deploying
 
 These steps assume you've already built the Lambda Layer using this repo and have the zipped layer stored as `layers/PyTorch.zip`. You can point this to another artifact in [main.tf](./main.tf) if needed.
