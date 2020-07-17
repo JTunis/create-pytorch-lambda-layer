@@ -10,3 +10,8 @@
 # Serverless
 **/.serverless/*
 **/node_modules/*
+
+# Terraform
+**/.terraform/*
+*.tfstate*
+**/build/*
