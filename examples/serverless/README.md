@@ -46,7 +46,8 @@ These steps assume you've already built the Lambda Layer using this repo and hav
     ```
 
 2) Configure AWS provider:
-Rename the `deploymentBucket` in the `provider` block of [serverless.yml](./serverless.yml) to the name of the S3 bucket you want to deploy. Note this name must be globably unique. Also, feel free to change the `region` of deployment for all of these resources.
+
+    Rename the `deploymentBucket` in the `provider` block of [serverless.yml](./serverless.yml) to the name of the S3 bucket you want to deploy. Note this name must be globably unique. Also, feel free to change the `region` of deployment for all of these resources.
 
 3) Configure your AWS credentials to point to your account. There are several ways to do [this](https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/setup-credentials.html).
 

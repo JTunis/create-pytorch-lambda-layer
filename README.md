@@ -71,6 +71,6 @@ The zipped layer is over the 50MB limit to be uploaded directly through Lambda's
 
 ## Examples
 
-WIP: Deploying with [Terraform](https://www.terraform.io/)
+Deploying with [Terraform](./examples/terraform)
 
 Deploying with [Serverless Framework](./examples/serverless)
