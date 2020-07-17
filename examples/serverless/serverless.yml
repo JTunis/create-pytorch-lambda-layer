@@ -1,0 +1,41 @@
+service: PyTorch-Example-Service
+
+provider:
+  name: aws
+  deploymentBucket:
+    name: pytorch-example-serverless-deployment-bucket
+    serverSideEncryption: AES256
+  stackName: PyTorch-Example-Stack
+  runtime: python3.8
+  stage: prod
+  region: us-east-1
+
+plugins:
+  - serverless-deployment-bucket
+
+package:
+  excludeDevDependencies: True
+  exclude:
+    - __pycache__/**
+    - node_modules/**
+    - package.json
+    - package-lock.json
+    - README.md
+    - layers/**
+
+layers:
+  PyTorch:
+    package:
+      artifact: layers/PyTorch.zip
+    compatibleRuntimes:
+      - python3.8
+
+functions:
+  pytorch-example:
+    handler: src/main.main
+    name: PyTorch-Example
+    timeout: 60
+    memorySize: 1024
+    description: Demonstrates usage of the PyTorch Lambda Layer
+    layers:
+      - {Ref: PyTorchLambdaLayer}

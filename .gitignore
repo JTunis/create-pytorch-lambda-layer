@@ -5,4 +5,8 @@
 .DS_Store
 
 # Layer artifacts
-layers/*
+**/layers/*
+
+# Serverless
+**/.serverless/*
+**/node_modules/*
