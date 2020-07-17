@@ -51,7 +51,7 @@ We include the `unzip_requirements` module in the Lambda Layer and it needs to b
 
 ```python
 try:
-    import unzip_requirments
+    import unzip_requirements
 except ImportError:
     pass
 import torch
@@ -63,7 +63,7 @@ def main(event, context):
 
 ```
 
-They try/except block is there so the same function code can be used locally (where we'll hit the `ImportError` and just use the conda/venv install torch library) as well as in Lambda. 
+They try/except block is there so the same function code can be used locally (where we'll hit the `ImportError` and just use the conda/venv install torch library) as well as in Lambda.
 
 ## Deploying the Layer
 
@@ -73,4 +73,4 @@ The zipped layer is over the 50MB limit to be uploaded directly through Lambda's
 
 WIP: Deploying with [Terraform](https://www.terraform.io/)
 
-WIP: Deploying with [Serverless Framework](https://www.serverless.com/)
+Deploying with [Serverless Framework](./examples/serverless)

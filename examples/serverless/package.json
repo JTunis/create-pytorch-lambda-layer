@@ -1,0 +1,12 @@
+{
+  "name": "pytorch-serverless-example",
+  "version": "1.0.0",
+  "description": "Deploying a PyTorch Lambda Function with Serverless Framework",
+  "dependencies": {
+    "serverless": "^1.75.1"
+  },
+  "devDependencies": {
+    "serverless-deployment-bucket": "^1.1.2"
+  },
+  "author": "JTunis"
+}
