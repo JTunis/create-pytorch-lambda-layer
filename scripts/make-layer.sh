@@ -27,19 +27,19 @@ esac
 # build torch wheel URL
 case ${TORCH_VERSION} in
     "") "ERROR: No Torch version specified" && exit 1;;
-    *) TORCH_WHEEL="https://download.pytorch.org/whl/cpu/torch-${TORCH_VERSION}%2Bcpu-${SHORT_PYTHON_VERSION}-${SHORT_PYTHON_VERSION}-linux_x86_64.whl";;
+    *) TORCH_WHEEL="https://download.pytorch.org/whl/cpu/torch-${TORCH_VERSION}%2Bcpu-${SHORT_PYTHON_VERSION}-${SHORT_PYTHON_VERSION}n-linux_x86_64.whl";;
 esac
 
 # build torchvision wheel URL
 case ${TORCHVISION_VERSION} in
     "") TORCHVISION_WHEEL="";;
-    *) TORCHVISION_WHEEL="https://download.pytorch.org/whl/cpu/torchvision-${TORCHVISION_VERSION}%2Bcpu-${SHORT_PYTHON_VERSION}-${SHORT_PYTHON_VERSION}-linux_x86_64.whl";;
+    *) TORCHVISION_WHEEL="https://download.pytorch.org/whl/cpu/torchvision-${TORCHVISION_VERSION}%2Bcpu-${SHORT_PYTHON_VERSION}-${SHORT_PYTHON_VERSION}n-linux_x86_64.whl";;
 esac
 
 # build torchaudio wheel URL
 case ${TORCHAUDIO_VERSION} in
     "") TORCHAUDIO_WHEEL="";;
-    *) TORCHAUDIO_WHEEL="https://download.pytorch.org/whl/torchaudio-${TORCHAUDIO_VERSION}-${SHORT_PYTHON_VERSION}-${SHORT_PYTHON_VERSION}-linux_x86_64.whl";;
+    *) TORCHAUDIO_WHEEL="https://download.pytorch.org/whl/torchaudio-${TORCHAUDIO_VERSION}-${SHORT_PYTHON_VERSION}-${SHORT_PYTHON_VERSION}n-linux_x86_64.whl";;
 esac
 
 # cleanup function to run if the script errors
