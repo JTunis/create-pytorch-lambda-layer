@@ -12,14 +12,28 @@ do
     esac
 done
 
-# derive short_python_version from input python version
+# derive c_python_version from input python version
 case ${PYTHON_VERSION} in
-    2.7) SHORT_PYTHON_VERSION="cp27";;
-    3.5) SHORT_PYTHON_VERSION="cp35";;
-    3.6) SHORT_PYTHON_VERSION="cp36";;
-    3.7) SHORT_PYTHON_VERSION="cp37";;
-    3.8) SHORT_PYTHON_VERSION="cp38";;
-    3.9) SHORT_PYTHON_VERSION="cp39";;
+    2.7) C_PYTHON_VERSION="cp27";;
+    3.5) C_PYTHON_VERSION="cp35";;
+    3.6) C_PYTHON_VERSION="cp36";;
+    3.7) C_PYTHON_VERSION="cp37";;
+    3.8) C_PYTHON_VERSION="cp38";;
+    3.9) C_PYTHON_VERSION="cp39";;
+    "") echo "ERROR: No Python version specified" && exit 1;;
+    *) echo "ERROR: Invalid Python version. Expected versions include: 2.7, 3.5, 3.6, 3.7, 3.8, 3.9" && exit 1;;
+esac
+
+# derive flagged_c_python_version from input python version
+# these include the "m" flag in the version to show it was implemented with Pymalloc
+# the "m" flag was removed in Python 3.8: https://docs.python.org/3/whatsnew/3.8.html#build-and-c-api-changes
+case ${PYTHON_VERSION} in
+    2.7) FLAGGED_C_PYTHON_VERSION="cp27m";;
+    3.5) FLAGGED_C_PYTHON_VERSION="cp35m";;
+    3.6) FLAGGED_C_PYTHON_VERSION="cp36m";;
+    3.7) FLAGGED_C_PYTHON_VERSION="cp37m";;
+    3.8) FLAGGED_C_PYTHON_VERSION="cp38";;
+    3.9) FLAGGED_C_PYTHON_VERSION="cp39";;
     "") echo "ERROR: No Python version specified" && exit 1;;
     *) echo "ERROR: Invalid Python version. Expected versions include: 2.7, 3.5, 3.6, 3.7, 3.8, 3.9" && exit 1;;
 esac
@@ -27,19 +41,19 @@ esac
 # build torch wheel URL
 case ${TORCH_VERSION} in
     "") "ERROR: No Torch version specified" && exit 1;;
-    *) TORCH_WHEEL="https://download.pytorch.org/whl/cpu/torch-${TORCH_VERSION}%2Bcpu-${SHORT_PYTHON_VERSION}-${SHORT_PYTHON_VERSION}-linux_x86_64.whl";;
+    *) TORCH_WHEEL="https://download.pytorch.org/whl/cpu/torch-${TORCH_VERSION}%2Bcpu-${C_PYTHON_VERSION}-${FLAGGED_C_PYTHON_VERSION}-linux_x86_64.whl";;
 esac
 
 # build torchvision wheel URL
 case ${TORCHVISION_VERSION} in
     "") TORCHVISION_WHEEL="";;
-    *) TORCHVISION_WHEEL="https://download.pytorch.org/whl/cpu/torchvision-${TORCHVISION_VERSION}%2Bcpu-${SHORT_PYTHON_VERSION}-${SHORT_PYTHON_VERSION}-linux_x86_64.whl";;
+    *) TORCHVISION_WHEEL="https://download.pytorch.org/whl/cpu/torchvision-${TORCHVISION_VERSION}%2Bcpu-${C_PYTHON_VERSION}-${FLAGGED_C_PYTHON_VERSION}-linux_x86_64.whl";;
 esac
 
 # build torchaudio wheel URL
 case ${TORCHAUDIO_VERSION} in
     "") TORCHAUDIO_WHEEL="";;
-    *) TORCHAUDIO_WHEEL="https://download.pytorch.org/whl/torchaudio-${TORCHAUDIO_VERSION}-${SHORT_PYTHON_VERSION}-${SHORT_PYTHON_VERSION}-linux_x86_64.whl";;
+    *) TORCHAUDIO_WHEEL="https://download.pytorch.org/whl/torchaudio-${TORCHAUDIO_VERSION}-${C_PYTHON_VERSION}-${FLAGGED_C_PYTHON_VERSION}-linux_x86_64.whl";;
 esac
 
 # cleanup function to run if the script errors
