@@ -20,6 +20,8 @@ Both of these solutions ultimately zip up the torch package and unzip it into La
 
 One issue is that the public Lambda Layers mentioned by fast.ai are a bit outdated and there could be other reasons why you would want to manage your own layer as opposed to relying on the public layer. This script enables you to build the layer for any given Python + torch versions, as well as specified versions of torchvision and torchaudio if needed, but follows the same zip/unzip pattern + usage used in both of the above solutions.
 
+For reference: the PyTorch whls are downloaded from [here](https://download.pytorch.org/whl/cpu/torch_stable.html)
+
 ## Dependencies
 
 This script relies on Docker to package the Python libraries in a simulated Lambda environment. You can install Docker Desktop for your OS by following the directions [here](https://docs.docker.com/get-docker/).
