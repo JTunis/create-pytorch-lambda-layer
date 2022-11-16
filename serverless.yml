@@ -1,0 +1,51 @@
+service: PyTorch-Example-Service-2
+
+provider:
+  name: aws
+  runtime: python3.8
+  stage: car-grading
+  region: eu-west-1
+  iam:
+    role:
+      managedPolicies:
+        - arn:aws:iam::aws:policy/AdministratorAccess
+
+plugins:
+  - serverless-deployment-bucket
+  # - serverless-python-requirements
+  # - serverless-plugin-lambda-dead-letter
+  # - serverless-prune-plugin
+
+package:
+  excludeDevDependencies: True
+  exclude:
+    - __pycache__/**
+    - node_modules/**
+    - package.json
+    - package-lock.json
+    - README.md
+    - README2.md
+    - layers/**
+    - .vscode
+    - scripts
+
+# layers:
+#   PyTorch:
+#     package:
+#       artifact: layers/PyTorch.zip
+#     compatibleRuntimes:
+#       - python3.8
+
+functions:
+  pytorch-example:
+    handler: src/main.main
+    timeout: 30
+    memorySize: 10000
+    ephemeralStorageSize: 3000
+    layers:
+      - arn:aws:lambda:eu-west-1:266047756759:layer:PyTorch:2
+      # - { Ref: PyTorchLambdaLayer }
+    events:
+      - http:
+          method: post
+          path: car-grading/grade
