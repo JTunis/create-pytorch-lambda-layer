@@ -1,4 +1,4 @@
-service: PyTorch-Example-Service-2
+service: PyTorch-Example-Service-3
 
 provider:
   name: aws
@@ -8,7 +8,7 @@ provider:
   iam:
     role:
       managedPolicies:
-        - arn:aws:iam::aws:policy/AdministratorAccess
+        - arn:aws:iam::aws:policy/AdministratorAccess # not sure why this is ignored
 
 plugins:
   - serverless-deployment-bucket # TODO don't need this
@@ -52,7 +52,7 @@ functions:
     handler: src/main.main
     timeout: 30
     memorySize: 10000
-    ephemeralStorageSize: 3000
+    ephemeralStorageSize: 3000 # not sure why this is ignored
     layers:
       - arn:aws:lambda:eu-west-1:266047756759:layer:PyTorch:2
       # - { Ref: PythonRequirementsLambdaLayer }

@@ -18,24 +18,22 @@ loader = transforms.Compose([transforms.ToPILImage(),
                                 transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
 
+s3 = boto3.client('s3')
+
+bucket = 'data-hello-world-car-gra-serverlessdeploymentbuck-1lieokb7ux9p9'
+key = 'model/prod-model'
+location = '/tmp/model'
+s3.download_file(bucket, key, location)
+
+model_ft = torch.load(location, map_location=torch.device('cpu'))
+    
+# switch the model to evaluation mode to make dropout and batch norm work in eval mode
+model_ft.eval()
+
 def main(event, context):
-    s3 = boto3.client('s3')
-
-    bucket = 'data-hello-world-car-gra-serverlessdeploymentbuck-1lieokb7ux9p9'
-
-    key = 'simple-model'
-
-    location = '/tmp/simple-model'
-    s3.download_file(bucket, key, location)
-    
-    model_ft = torch.load(location)
-    
-    # switch the model to evaluation mode to make dropout and batch norm work in eval mode
-    model_ft.eval()
-    
     body = json.loads(event['body'])
     
-    base64_encoded_image = body['image']
+    base64_encoded_image = body
     
     img_path = '/tmp/img.jpg'
     
@@ -43,21 +41,23 @@ def main(event, context):
         print(file.write(base64.b64decode(base64_encoded_image)))
 
     image = read_image(img_path)
-    # print('image')
-    # print(image)
     image = loader(image).float()
     image = torch.autograd.Variable(image, requires_grad=True)
     image = image.unsqueeze(0)
     output = model_ft(image)
     conf, predicted = torch.max(output.data, 1)
 
+    car_class = predicted.item()
+
     print('confidence:', conf.item())
-    print('predicted:', predicted.item())
+    print('car_class:', car_class)
     
-    # map output to label enum
-    predictionMap = {0: 'Excellent', 1: 'Good', 2: 'Average'} 
-    grade = predictionMap[predicted.item()]
+    mapClassToLabel = {0: 'Excellent', 1: 'Good', 2: 'Average'} 
+    grade = mapClassToLabel[car_class]
     print('grade', grade)  
+    
+    mapClassToPrice = {0: 1500, 1: 1200, 2: 900} 
+    price = mapClassToPrice[car_class]
 
     
     # TODO save output to S3
@@ -65,10 +65,14 @@ def main(event, context):
 
     body = {
         "input": event,
-        "output": grade
+        "output": { "grade": grade, "price": price }
     }
 
-    response = {"statusCode": 200, "body": json.dumps(body)}
+    response = {"statusCode": 200, "body": json.dumps(body), 'headers': {
+            'Access-Control-Allow-Headers': 'Content-Type',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
+        }}
     
     print(response)
     
