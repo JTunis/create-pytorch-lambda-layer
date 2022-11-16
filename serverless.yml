@@ -11,10 +11,21 @@ provider:
         - arn:aws:iam::aws:policy/AdministratorAccess
 
 plugins:
-  - serverless-deployment-bucket
+  - serverless-deployment-bucket # TODO don't need this
   # - serverless-python-requirements
-  # - serverless-plugin-lambda-dead-letter
   # - serverless-prune-plugin
+
+# custom:
+#   pythonRequirements:
+#     usePoetry: false
+#     dockerizePip: non-linux
+#     dockerSsh: true
+#     noDeploy: []
+#     layer:
+#       name: ${self:service}-car-grading-layer
+#       description: Lambda layer with dependencies (installed from Pipfile)
+#       compatibleRuntimes:
+#         - python3.8
 
 package:
   excludeDevDependencies: True
@@ -44,6 +55,7 @@ functions:
     ephemeralStorageSize: 3000
     layers:
       - arn:aws:lambda:eu-west-1:266047756759:layer:PyTorch:2
+      # - { Ref: PythonRequirementsLambdaLayer }
       # - { Ref: PyTorchLambdaLayer }
     events:
       - http:
